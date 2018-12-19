@@ -1,6 +1,6 @@
 import document from "document";
 import { _ } from "../common/locale.js";
-import { twoDig, monoDig, formatTime, formatDate } from "timeFormat.js";
+import { twoDig, monoDig, formatTime, formatDate } from "./timeFormat.js";
 
 /* Countdown */
 var thisEvent = undefined;

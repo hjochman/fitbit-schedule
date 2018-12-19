@@ -72,10 +72,10 @@ export default class gCalendar {
   loadEvents() {
 	let calURL = [];
 	let calType = [];
-    if(!this.isLoggedIn()) return;
-    for (let index = 0; index < settingsStorage.length; index++) {
+
+	for (let index = 0; index < settingsStorage.length; index++) {
       let key = settingsStorage.key(index);
-  //    console.log(key + ":" + settingsStorage.getItem(key));
+  // console.log(key + ":" + settingsStorage.getItem(key));
       if (key && key.substring(0, 3) === "url" && key.length === 4) {
     	// We already have an URL
     	let value = JSON.parse(settingsStorage.getItem(key)).name;
@@ -91,12 +91,6 @@ export default class gCalendar {
     }
   }
   
-  isLoggedIn() {
-	// TODO: Need to be fixed
-	return true;
-    // return settingsStorage.getItem('oauth_refresh_token') !== undefined;
-  }
-
   fetchEvents(calURL, calType, retry) {
     const now = new Date().getTime();
     const today = new Date().setHours(0,0,0,0);
@@ -106,8 +100,6 @@ export default class gCalendar {
     let calendarInfo = [];
 
       for (var i = 0; i < calURL.length; i++) {
-    	  //TODO: Check if ICS or CLDAV => now we only use ICS
-    	  console.log(i + calType[i]);
     	  if (calType[i] === "true") {
             calendarIDs.push(getEventsPromiseCALDAV(calURL[i]));    		  
     	  } else {
@@ -125,11 +117,11 @@ export default class gCalendar {
         for (let i in values) {
         	console.log(`cal ${i} is ${values[i].substring(0,20)}`);
 
-        /**  if (values[i].error !== undefined) {
-            console.log("Error occurred while fetching calendar " + i +" :");
-            console.log(JSON.stringify(values[i].error));
-            continue;
-          } **/
+        /***********************************************************************
+		 * if (values[i].error !== undefined) { console.log("Error occurred
+		 * while fetching calendar " + i +" :");
+		 * console.log(JSON.stringify(values[i].error)); continue; }
+		 **********************************************************************/
           	
           let items = icsToJson(values[i])  
           
@@ -186,7 +178,7 @@ function getEventsPromiseCALDAV(calendarURL) {
   loginPass = JSON.parse(settingsStorage.getItem("pass")).name;
   loginUser = JSON.parse(settingsStorage.getItem("user")).name;
   
-  //console.log(loginUser + ":" + loginPass);
+  // console.log(loginUser + ":" + loginPass);
   
   headers.append("Depth",1); 
   headers.append("Prefer","return-minimal");
@@ -232,10 +224,19 @@ function getEventsPromiseCALDAV(calendarURL) {
   });
 }
 
+function zeroPad(i) {
+    
+    if (i < 10) {
+        i = "0" + i;
+    }
+    return i;
+}
+
+
 function getEventsPromiseICS(calendarURL) { 
   var headers = new Headers();
-  //headers.append("Content-Type","VCS/ICS-Kalender ; charset=utf-8");
-  //headers.append("Content-Type","text/plain ; charset=utf-8");
+  // headers.append("Content-Type","VCS/ICS-Kalender ; charset=utf-8");
+  // headers.append("Content-Type","text/plain ; charset=utf-8");
   headers.append("User-Agent","Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:21.0) Gecko/20100101 Firefox/21.0");
   
   return fetch(calendarURL, {
@@ -257,20 +258,20 @@ function formatColor(colorID) {
 }
 
 function formatEvent(event, calendar) {
-	//TODO: ID is only dummy for now
-	console.log(`text ${event.summary}`);
-	console.log(`formatEvent ${JSON.stringify(event)}`);
-	  //console.log(`sartTime ${event.start}`);
-	  //console.log(`sartTime ${calenDate(event.start).toString()}`);
+	// TODO: ID is only dummy for now
+	//console.log(`text ${event.summary}`);
+	//console.log(`formatEvent ${JSON.stringify(event)}`);
+	  // console.log(`sartTime ${event.start}`);
+	  // console.log(`sartTime ${calenDate(event.start).toString()}`);
 	  
 	  
   var data = {
     id: "",
-    start: calenDate(event.startDate).getTime(),
-    end:  event.endDate === undefined ? calenDate(event.startDate).getTime() : calenDate(event.endDate).getTime(),
-    allDay: (event.startDate.length == 8 && event.endDate !== undefined && event.endDate.length == 8) ? true : false,
+    start: new Date(event.startDate).getTime(),
+    end:  event.endDate === undefined ? new Date(event.startDate).getTime() : new Date(event.endDate).getTime(),
+    allDay: event.allDay,
     summary: event.summary,
-    location: event.location,
+    location: event.location === undefined ? "" : event.location,
     color: formatColor(calendar),
     calendar: {
       color: formatColor(calendar),
@@ -281,35 +282,3 @@ function formatEvent(event, calendar) {
   return data;
 }
 
-/**
- * Decode ical dateTime
- * 
- * Arguments: dateTime (string) dateTime string in ical format
- */
-function calenDate(icalStr)  {
-    // icalStr = '20110914T184000Z'
-	var strHour = "00";
-    var strMin = "00";
-    var strSec = "00";
-    
-    var strYear = icalStr.substr(0,4);
-    var strMonth = icalStr.substr(4,2);
-    var strDay = icalStr.substr(6,2);
-    if (icalStr.length > 8) {
-    	strHour = icalStr.substr(9,2);
-    	strMin = icalStr.substr(11,2);
-    	strSec = icalStr.substr(13,2);   	
-    }
- 
-    var oDate = new Date(parseInt(strYear),parseInt(strMonth)-1, parseInt(strDay), parseInt(strHour), parseInt(strMin), parseInt(strSec),0);
-    
-return oDate;
-}
-
-function zeroPad(i) {
-    
-    if (i < 10) {
-        i = "0" + i;
-    }
-    return i;
-}

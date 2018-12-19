@@ -16,6 +16,7 @@ export default class GCalendar {
         this._lastUpdate = this._events.lastUpdate;
 //DEBUG: Endable to forth a refetch of the data on every app start
 //        this._lastUpdate = new date("yesterday");
+//DEBUG: ---------------------------------------------------------
         this._events = this._events.events;
       } else {
         console.log("no cached calendar retrived on load");

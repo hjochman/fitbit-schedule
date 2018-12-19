@@ -74,12 +74,14 @@
     </svg>
     </use>
     <use id="this-event-countdown" href="#countdown-view">
-      <set href="event-name-marquee/group/text" attributeName="text-buffer" to="Event name" />
-      <set href="event-location" attributeName="text-buffer" to="A place where it happens." />
+ <!--     <set href="event-name-marquee/group/text" attributeName="text-buffer" to="Event name" />
+      <set href="event-location" attributeName="text-buffer" to="A place where it happens." /> -->
       <set href="countdown-time" attributeName="text-buffer" to="10:25" />
     </use>
     
     <use id="next-event-countdown" href="#countdown-view">
+ <!--     <set href="event-name-marquee/group/text" attributeName="text-buffer" to="Event name" />
+      <set href="event-location" attributeName="text-buffer" to="A place where it happens." /> -->
       <set href="countdown-name" attributeName="text-buffer" to="Next event" />
     </use>
     

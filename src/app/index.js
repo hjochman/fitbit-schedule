@@ -8,18 +8,18 @@ import { battery } from "power";
 import { me } from "appbit";
 import { me as device } from "device";
 import { _ } from "../common/locale.js";
-import { initLocale } from "locale.js";
+import { initLocale } from "./locale.js";
 
 if (!device.screen) device.screen = { width: 348, height: 250 };
 
 import GCalendar from "./gCalendar.js";
 
-import { renderSnackBar } from "snackbar.js";
-import { formatTime, formatDate, formatTimeRange } from "timeFormat.js";
-import { renderPersistentErrorMessage } from "utils.js";
-import { renderOverlay, overlayInit } from "overlay.js";
-import { loadSettings, saveSettings } from "settings.js";
-import { renderCountdown, tickCountdown } from "countdown.js";
+import { renderSnackBar } from "./snackbar.js";
+import { formatTime, formatDate, formatTimeRange } from "./timeFormat.js";
+import { renderPersistentErrorMessage } from "./utils.js";
+import { renderOverlay, overlayInit } from "./overlay.js";
+import { loadSettings, saveSettings } from "./settings.js";
+import { renderCountdown, tickCountdown } from "./countdown.js";
 
 const calendar = new GCalendar();
 
@@ -120,7 +120,7 @@ function renderEvents() {
   if (!me.permissions.granted("run_background"))
     listStorage = renderSnackbar(_("rib_required"), eventListSV);
 
-  //ToDo: Settings check abgeschaltet
+  //TODO: Settings check abgeschaltet
   //if (!settings.oauth_refresh_token) {
   //  renderCountdown(settings, []);
   //  listStorage = renderPersistentErrorMessage(_("login_required"), eventListSV);
