@@ -1,5 +1,8 @@
-import { G_CALENDAR_CLIENT_ID, G_CALENDAR_CLIENT_SECRET } from "../common/config";
+//import { G_CALENDAR_CLIENT_ID, G_CALENDAR_CLIENT_SECRET } from "../common/config";
 import { _, setPrefLanguage } from "settingsLocale.js";
+
+let G_CALENDAR_CLIENT_ID = "";
+let G_CALENDAR_CLIENT_SECRET = "";
 
 function mySettings(props) {
   try {
@@ -39,6 +42,23 @@ function mySettings(props) {
           }}
         />
       </Section>
+      <Section
+        title={<Text bold align="center">CALDAV/ICS Settings</Text>}>
+        <TextInput settingsKey="user" label="User" type="text" />
+        <TextInput settingsKey="pass" label="Password" type="text" />
+        Configure up to five CALDAV/ICS URLs:
+        <TextInput settingsKey="url0" label="URL 1: (e.g.: https://hostname:8443/calendars/__uids__/XXXXXXX-XXXX-XXXX-XXXX-XXXXXX/YYYYYY-YYYY-YYYY-YYYY-YYYYYY/)" type="text" />
+        <Toggle settingsKey="url0t" label={`Type: ${props.settings.url0t === 'true' ? 'CALDAV' : 'ICAL'}`}/>
+        <TextInput settingsKey="url1" label="URL 2: (e.g.: https://hostname:8443/calendars/__uids__/XXXXXXX-XXXX-XXXX-XXXX-XXXXXX/YYYYYY-YYYY-YYYY-YYYY-YYYYYY/)" type="text" />
+        <Toggle settingsKey="url1t" label={`Type: ${props.settings.url1t === 'true' ? 'CALDAV' : 'ICAL'}`}/>
+        <TextInput settingsKey="url2" label="URL 3: (e.g.: https://hostname:8443/calendars/__uids__/XXXXXXX-XXXX-XXXX-XXXX-XXXXXX/YYYYYY-YYYY-YYYY-YYYY-YYYYYY/)" type="text" />
+        <Toggle settingsKey="url2t" label={`Type: ${props.settings.url2t === 'true' ? 'CALDAV' : 'ICAL'}`}/>
+        <TextInput settingsKey="url3" label="URL 4: (e.g.: https://hostname:8443/calendars/__uids__/XXXXXXX-XXXX-XXXX-XXXX-XXXXXX/YYYYYY-YYYY-YYYY-YYYY-YYYYYY/)" type="text" />
+        <Toggle settingsKey="url3t" label={`Type: ${props.settings.url3t === 'true' ? 'CALDAV' : 'ICAL'}`}/>
+        <TextInput settingsKey="url4" label="URL 5: (e.g.: https://hostname:8443/calendars/__uids__/XXXXXXX-XXXX-XXXX-XXXX-XXXXXX/YYYYYY-YYYY-YYYY-YYYY-YYYYYY/)" type="text" />
+        <Toggle settingsKey="url4t" label={`Type: ${props.settings.url4t === 'true' ? 'CALDAV' : 'ICAL'}`}/>
+      </Section>
+ 
       <Section title="Options">
         <Toggle
           settingsKey="system_default_font"

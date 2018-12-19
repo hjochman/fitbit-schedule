@@ -1,10 +1,10 @@
 {
   "fitbit": {
-    "appUUID": "38b688ed-0ff1-40cc-a906-5a9a50852740",
+    "appUUID": "6a43b3a7-8b1d-4668-8173-7b69ea3d9584",
     "appType": "app",
     "appDisplayName": "Schedule",
     "iconFile": "resources/icon.png",
-    "wipeColor": "#f44336",
+    "wipeColor": "#607d8b",
     "requestedPermissions": [
       "access_internet",
       "run_background"
@@ -24,5 +24,12 @@
         "name": "日程"
       }
     }
+  },
+  "devDependencies": {
+    "@fitbit/sdk": "~1.0.0",
+    "@fitbit/sdk-cli": "^1.0.0"
+  },
+  "scripts": {
+    "build": "fitbit-build"
   }
 }

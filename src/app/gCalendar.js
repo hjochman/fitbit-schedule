@@ -9,10 +9,13 @@ export default class GCalendar {
     this.onUpdate = function(){};
     this.onError = function(error){};
     this._lastUpdate = new Date().getTime();
+    console.log("- load Envets from file start -");    
     try {
       this._events = fs.readFileSync(GC_DATA_FILE, "cbor");
       if (this._events !== undefined) {
         this._lastUpdate = this._events.lastUpdate;
+//DEBUG: Endable to forth a refetch of the data on every app start
+//        this._lastUpdate = new date("yesterday");
         this._events = this._events.events;
       } else {
         console.log("no cached calendar retrived on load");

@@ -119,11 +119,14 @@ function renderEvents() {
   }
   if (!me.permissions.granted("run_background"))
     listStorage = renderSnackbar(_("rib_required"), eventListSV);
-  if (!settings.oauth_refresh_token) {
-    renderCountdown(settings, []);
-    listStorage = renderPersistentErrorMessage(_("login_required"), eventListSV);
-    return;
-  }
+
+  //ToDo: Settings check abgeschaltet
+  //if (!settings.oauth_refresh_token) {
+  //  renderCountdown(settings, []);
+  //  listStorage = renderPersistentErrorMessage(_("login_required"), eventListSV);
+  //  return;
+  // }
+  
   const lastUpdateTime = calendar.getLastUpdate();
   const now = new Date();
   listStorage = [
@@ -134,6 +137,7 @@ function renderEvents() {
   ];
   let lastDay = formatDate(now, false);
   const events = calendar.getEvents();
+  console.log(`App Events: ${JSON.stringify(events)}`);
   if (events === undefined || events.length === 0) {
     console.log('Calendar events are undefined or empty!');
     listStorage = renderPersistentErrorMessage(_("no_event"), eventListSV);
@@ -141,6 +145,8 @@ function renderEvents() {
   }
   for (let i in events) {
     let date = formatDate(events[i].start, false);
+//    console.log(`start: ${events[i].start} / ${date.toString()}`);
+    
     if (date != lastDay) {
       listStorage.push({
         type: "date-separator-pool",
