@@ -12,14 +12,15 @@ const dsvView = document.getElementById('detail-overlay-sv');
 
 export function renderOverlay(evt) {
     if (evt === undefined) return;
-    dsvCalendar.style.fill = evt.calendar.color.background;
-    dsvCalendar.text = evt.calendar.summary;
+//    dsvCalendar.style.fill = evt.calendar.color.background;
+//    dsvCalendar.text = evt.calendar.summary;    
+    dsvCalendar.text = evt.cal;
     dsvTime.text = formatTimeRange(evt.start, evt.end, true, evt.allDay, true);
     dsvSummary.text = evt.summary;
-    if (evt.color.background != "#00A4Ee") {
+//    if (evt.color.background != "#00A4Ee") {
         dsvSummary.style.fill = evt.color.background;
         dsvTime.style.fill = evt.color.background;
-    }
+//    }
     if (evt.location === undefined) {
         dsvLocation.style.display = "none";
         dsvLocation.text = "";

@@ -3,11 +3,11 @@ import { outbox } from "file-transfer";
 import { peerSocket } from "messaging";
 import * as cbor from "cbor";
 import icsToJson from "./icsToJson.js"
-import { GC_DATA_FILE, GC_ERROR_FILE, GC_UPDATE_TOKEN, MAX_EVENT_COUNT } from "../common/const";
+import { GC_DATA_FILE, GC_ERROR_FILE, GC_UPDATE_TOKEN, MAX_EVENT_COUNT, MAX_EVENT_MEM } from "../common/const";
 
 const colorMapping = {
   "1": {
-   "background": "#a4bdfc",
+   "background": "#00ff00",
    "foreground": "#1d1d1d"
   },
   "2": {
@@ -75,7 +75,7 @@ export default class gCalendar {
 
 	for (let index = 0; index < settingsStorage.length; index++) {
       let key = settingsStorage.key(index);
-  // console.log(key + ":" + settingsStorage.getItem(key));
+  //console.log(key + ":" + settingsStorage.getItem(key));
       if (key && key.substring(0, 3) === "url" && key.length === 4) {
     	// We already have an URL
     	let value = JSON.parse(settingsStorage.getItem(key)).name;
@@ -126,7 +126,7 @@ export default class gCalendar {
           let items = icsToJson(values[i])  
           
           for (let event of items) {
-            let ev = formatEvent(event, calendarInfo[i]);
+            let ev = formatEvent(event, calendarInfo[i]+1);
             if (ev.end >= today) events.push(ev);
           }
         }
@@ -141,10 +141,15 @@ export default class gCalendar {
             return -1;
           else if (a.summary > b.summary)
             return 1;
-          else return 0;
-          
+          else return 0;      
         });
-        events = events.slice(0, MAX_EVENT_COUNT);
+        
+        events = events.slice(0, MAX_EVENT_COUNT);       
+        for (var i = (MAX_EVENT_COUNT-1); jsonSize({lastUpdate: now, events: events}) > MAX_EVENT_MEM; i--) {
+        	events = events.slice(0, i);
+        }
+        console.log("GC_DATA_FILE size = " + jsonSize({lastUpdate: now, events: events}));
+        console.log("event count = " + events.length);
 
         // Send the file out
         outbox.enqueue(GC_DATA_FILE, cbor.encode({lastUpdate: now, events: events}))
@@ -152,6 +157,8 @@ export default class gCalendar {
         self.data = {lastUpdate: now, events: events};
       }).catch(err => {
         console.log('Error occurred while fetching single calendar events: ' + err + err.stack);
+        outbox.enqueue(GC_ERROR_FILE, cbor.encode(err))
+        	.catch(error => console.log(`Fail to send error: ${error}`));
       });
    
   }
@@ -272,12 +279,19 @@ function formatEvent(event, calendar) {
     summary: event.summary,
     location: event.location === undefined ? "" : event.location,
     color: formatColor(calendar),
-    calendar: {
+    cal: "Calendar " + calendar
+  };
+  /**
+      calendar: {
       color: formatColor(calendar),
       summary: "Calendar " + calendar,
       id: calendar,
     },
-  };
+   */
   return data;
 }
 
+//Get byte size of a JSON object
+function jsonSize(s) {
+	  return ~-encodeURI(JSON.stringify(s)).split(/%..|./).length;
+	}

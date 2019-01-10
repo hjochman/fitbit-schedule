@@ -140,7 +140,7 @@ function renderEvents() {
   ];
   let lastDay = formatDate(now, false);
   const events = calendar.getEvents();
-  console.log(`App Events: ${JSON.stringify(events)}`);
+//  console.log(`App Events: ${JSON.stringify(events)}`);
   if (events === undefined || events.length === 0) {
     console.log('Calendar events are undefined or empty!');
     listStorage = renderPersistentErrorMessage(_("no_event"), eventListSV);
