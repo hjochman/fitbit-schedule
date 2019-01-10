@@ -9,9 +9,8 @@ A schedule viewer for Fitbit OS 2.
 
 ## Features
 - [x] Support Fitbit Versa and Fitbit Ionic.
-- [x] Support Google Calendar
-    - [x] Show multiple calendars together (only calendars turned on in Google Calendar settings are shown)
-- [x] Color coded events
+- [x] Support ICAL and CLDAV Calendar
+    - [x] Show multiple calendars together
 - [x] Detail page showing event title, time and location.
 - [x] Countdown to the end of current event
 - [x] Countdown to the start of next event
