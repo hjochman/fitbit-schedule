@@ -15,7 +15,7 @@ export default class GCalendar {
       if (this._events !== undefined) {
         this._lastUpdate = this._events.lastUpdate;
 //DEBUG: Endable to forth a refetch of the data on every app start
-//        this._lastUpdate = new date("yesterday");
+//        this._lastUpdate = 0;
 //DEBUG: ---------------------------------------------------------
         this._events = this._events.events;
       } else {
@@ -25,6 +25,8 @@ export default class GCalendar {
       this._lastUpdate = 0;
       this._events = undefined;
     }
+    //this._lastUpdate = 0;
+    //this._events = undefined;
   }
   
   getLastUpdate() {

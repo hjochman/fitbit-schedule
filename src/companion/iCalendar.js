@@ -2,7 +2,7 @@ import { settingsStorage } from "settings";
 import { outbox } from "file-transfer";
 import { peerSocket } from "messaging";
 import * as cbor from "cbor";
-import icsToJson from "../common/icsToJson.js"
+import icsToJson from "./icsToJson.js"
 import { GC_DATA_FILE, GC_ERROR_FILE, GC_UPDATE_TOKEN, MAX_EVENT_COUNT } from "../common/const";
 
 const colorMapping = {
@@ -264,9 +264,8 @@ function formatEvent(event, calendar) {
 	  // console.log(`sartTime ${event.start}`);
 	  // console.log(`sartTime ${calenDate(event.start).toString()}`);
 	  
-	  
+   //     id: "",	  
   var data = {
-    id: "",
     start: new Date(event.startDate).getTime(),
     end:  event.endDate === undefined ? new Date(event.startDate).getTime() : new Date(event.endDate).getTime(),
     allDay: event.allDay,

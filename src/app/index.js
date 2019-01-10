@@ -67,6 +67,7 @@ inbox.addEventListener("newfile", function () {
   }
 });
 
+//process settings change send from phone
 messaging.peerSocket.onmessage = (evt) => {
   try {
     settings[evt.data.key] = JSON.parse(evt.data.newValue);
@@ -74,14 +75,16 @@ messaging.peerSocket.onmessage = (evt) => {
     settings[evt.data.key] = evt.data.newValue;
   }
 
-  if (evt.data.key === 'oauth_refresh_token' && !evt.data.restore) {
+ /** if (evt.data.key === 'oauth_refresh_token' && !evt.data.restore) {
     // Google calendar OAuth settings
     if (evt.data.newValue === undefined) {
       calendar.dropEvents();
     } else if (calendar.fetchEvents()) {
       calendar.onUpdate();
     }
-  } else if (evt.data.key === 'system_default_font' && !evt.data.restore) {
+  } else **/ 
+	  
+  if (evt.data.key === 'system_default_font' && !evt.data.restore) {
     // Font change
     updateFont();
     eventListSV.redraw();
@@ -120,13 +123,13 @@ function renderEvents() {
   if (!me.permissions.granted("run_background"))
     listStorage = renderSnackbar(_("rib_required"), eventListSV);
 
-  //TODO: Settings check abgeschaltet
-  //if (!settings.oauth_refresh_token) {
-  //  renderCountdown(settings, []);
-  //  listStorage = renderPersistentErrorMessage(_("login_required"), eventListSV);
-  //  return;
-  // }
-  
+  if (!settings.url0 &&  settings.url0 !== "") {
+    renderCountdown(settings, []);
+    listStorage = renderPersistentErrorMessage(_("login_required"), eventListSV);
+    console.log("No settings found, error and quit")
+    return;
+   }
+		  
   const lastUpdateTime = calendar.getLastUpdate();
   const now = new Date();
   listStorage = [
