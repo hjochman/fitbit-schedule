@@ -119,13 +119,17 @@ function renderEvents() {
   if (!me.permissions.granted("access_internet")) {
     renderCountdown(settings, []);
     listStorage = renderPersistentErrorMessage(_("internet_required"), eventListSV);
+    eventListSV.redraw();
+    return;
   }
+  
   if (!me.permissions.granted("run_background"))
     listStorage = renderSnackbar(_("rib_required"), eventListSV);
 
   if (!settings.url0 &&  settings.url0 !== "") {
     renderCountdown(settings, []);
     listStorage = renderPersistentErrorMessage(_("login_required"), eventListSV);
+    eventListSV.redraw();
     console.log("No settings found, error and quit")
     return;
    }
@@ -230,7 +234,8 @@ eventListSV.delegate = {
       return;
     }
 
-    tile.getElementById('event-color').style.fill = info.event.color.background;
+//    tile.getElementById('event-color').style.fill = info.event.color.background;
+    tile.getElementById('event-color').style.fill = info.event.color;
 
     let summary = tile.getElementById('event-summary');
     summary.text = info.event.summary;

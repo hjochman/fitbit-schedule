@@ -7,5 +7,5 @@ export function renderSnackBar(message) {
     snackBar.style.display = "inline";
     snackBar.animate("expand");
     snackBar.getElementById("background").sendEvent({ type: "reload" });
-    setTimeout(function () { snackBar.style.display = "none" }, 4000);
+    setTimeout(function () { snackBar.style.display = "none" }, 10000);
 };

@@ -44,7 +44,8 @@ export function renderCountdown(settings, events) {
         thisEventPage.getElementById("countdown-target").text = downToTime;
         thisMarquee.getElementById("text").text = thisEvent.summary;
         thisMarquee.getElementById("copy").text = thisEvent.summary;
-        thisMarquee.style.fill = thisEvent.color.background;
+//        thisMarquee.style.fill = thisEvent.color.background;
+        thisMarquee.style.fill = thisEvent.color;
         thisEventPage.getElementById("event-location").text = thisEvent.location;
     } else {
         thisEventPage.style.display = "none";
@@ -57,7 +58,8 @@ export function renderCountdown(settings, events) {
         nextEventPage.getElementById("countdown-target").text = downToTime;
         nextMarquee.getElementById("text").text = nextEvent.summary;
         nextMarquee.getElementById("copy").text = nextEvent.summary;
-        nextMarquee.style.fill = nextEvent.color.background;
+//        nextMarquee.style.fill = nextEvent.color.background;
+        nextMarquee.style.fill = nextEvent.color;
         nextEventPage.getElementById("event-location").text = nextEvent.location;
     } else {
         nextEventPage.style.display = "none";

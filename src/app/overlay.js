@@ -18,8 +18,10 @@ export function renderOverlay(evt) {
     dsvTime.text = formatTimeRange(evt.start, evt.end, true, evt.allDay, true);
     dsvSummary.text = evt.summary;
 //    if (evt.color.background != "#00A4Ee") {
-        dsvSummary.style.fill = evt.color.background;
-        dsvTime.style.fill = evt.color.background;
+//    dsvSummary.style.fill = evt.color.background;
+//    dsvTime.style.fill = evt.color.background;
+    dsvSummary.style.fill = evt.color;
+    dsvTime.style.fill = evt.color;
 //    }
     if (evt.location === undefined) {
         dsvLocation.style.display = "none";

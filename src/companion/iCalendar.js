@@ -5,53 +5,6 @@ import * as cbor from "cbor";
 import icsToJson from "./icsToJson.js"
 import { GC_DATA_FILE, GC_ERROR_FILE, GC_UPDATE_TOKEN, MAX_EVENT_COUNT, MAX_EVENT_MEM } from "../common/const";
 
-const colorMapping = {
-  "1": {
-   "background": "#00ff00",
-   "foreground": "#1d1d1d"
-  },
-  "2": {
-   "background": "#ffb878",
-   "foreground": "#1d1d1d"
-  },
-  "3": {
-   "background": "#dbadff",
-   "foreground": "#1d1d1d"
-  },
-  "4": {
-   "background": "#ff887c",
-   "foreground": "#1d1d1d"
-  },
-  "5": {
-   "background": "#fbd75b",
-   "foreground": "#1d1d1d"
-  },
-  "6": {
-   "background": "#7ae7bf",
-   "foreground": "#1d1d1d"
-  },
-  "7": {
-   "background": "#46d6db",
-   "foreground": "#1d1d1d"
-  },
-  "8": {
-   "background": "#e1e1e1",
-   "foreground": "#1d1d1d"
-  },
-  "9": {
-   "background": "#5484ed",
-   "foreground": "#1d1d1d"
-  },
-  "10": {
-   "background": "#51b749",
-   "foreground": "#1d1d1d"
-  },
-  "11": {
-   "background": "#dc2127",
-   "foreground": "#1d1d1d"
-  }
-};
-
 export default class gCalendar {
   
   constructor() {
@@ -70,28 +23,6 @@ export default class gCalendar {
   }
 
   loadEvents() {
-	let calURL = [];
-	let calType = [];
-
-	for (let index = 0; index < settingsStorage.length; index++) {
-      let key = settingsStorage.key(index);
-  //console.log(key + ":" + settingsStorage.getItem(key));
-      if (key && key.substring(0, 3) === "url" && key.length === 4) {
-    	// We already have an URL
-    	let value = JSON.parse(settingsStorage.getItem(key)).name;
-   	    if(value && value.length > 0) {
-      	  calURL.push(value);
-      	  calType.push(settingsStorage.getItem(key+"t"));
-   	    }
-      }
-    }
-    if(calURL[0] && calURL[0].length > 0) {
-    	// We have at least one URL, trigger Update
-    	this.fetchEvents(calURL, calType, true);
-    }
-  }
-  
-  fetchEvents(calURL, calType, retry) {
     const now = new Date().getTime();
     const today = new Date().setHours(0,0,0,0);
     const self = this;
@@ -99,16 +30,23 @@ export default class gCalendar {
     let calendarIDs = [];
     let calendarInfo = [];
 
-      for (var i = 0; i < calURL.length; i++) {
-    	  if (calType[i] === "true") {
-            calendarIDs.push(getEventsPromiseCALDAV(calURL[i]));    		  
-    	  } else {
-            calendarIDs.push(getEventsPromiseICS(calURL[i]));
-    	  } 
-    	  calendarInfo.push(i);
-    	}
+      for (var i = 0; i < 5 && settingsStorage.getItem(`url${i}`) !== null; i++) {
+    	  let url = JSON.parse(settingsStorage.getItem(`url${i}`)).name;
+    	  console.log(`cal${i}: ${url}`);
+    	  if (url.length > 0){
+    		  console.log(settingsStorage.getItem(`url${i}t`));
+    		  if (JSON.parse(settingsStorage.getItem(`url${i}t`)) == true) {
+    			  calendarIDs.push(getEventsPromiseCALDAV(url));    		  
+    		  } else {
+    			  calendarIDs.push(getEventsPromiseICS(url));
+    		  }
+    		  calendarInfo.push(i);
+    	  }
+      }
 
-      if (calendarIDs.length < 0) return;
+      console.log(calendarIDs.length);
+      
+      if (calendarIDs.length == 0) return;
       
       const promise = calendarIDs[0].constructor;
       
@@ -126,7 +64,7 @@ export default class gCalendar {
           let items = icsToJson(values[i])  
           
           for (let event of items) {
-            let ev = formatEvent(event, calendarInfo[i]+1);
+            let ev = formatEvent(event, i);
             if (ev.end >= today) events.push(ev);
           }
         }
@@ -157,7 +95,8 @@ export default class gCalendar {
         self.data = {lastUpdate: now, events: events};
       }).catch(err => {
         console.log('Error occurred while fetching single calendar events: ' + err + err.stack);
-        outbox.enqueue(GC_ERROR_FILE, cbor.encode(err))
+        let error=`${err}`;
+        outbox.enqueue(GC_ERROR_FILE, cbor.encode(error))
         	.catch(error => console.log(`Fail to send error: ${error}`));
       });
    
@@ -226,9 +165,6 @@ function getEventsPromiseCALDAV(calendarURL) {
     	     console.log(result.headers.get('Content-Type'));
     	     return result.text();
     	  })
-  .catch((err) => {
-    console.log(`Failed to fetch calendar withid ${calendarURL} with error ${err}`);
-  });
 }
 
 function zeroPad(i) {
@@ -248,46 +184,26 @@ function getEventsPromiseICS(calendarURL) {
   
   return fetch(calendarURL, {
 	  method: "GET",
-      headers}).then((res) => res.text())
-  .catch((err) => {
-    console.log(`Failed to fetch calendar withid ${calendarURL} with error ${err}`);
-  });
-
- 
+      headers}).then((res) => res.text());
 }
 
-function formatColor(colorID) {
-  let color = colorMapping[`${colorID}`];
-  if (color === undefined) {
-    color = {background: "#00A4Ee", foreground: "#ffffff"};
-  }
-  return color;
-}
-
-function formatEvent(event, calendar) {
-	// TODO: ID is only dummy for now
-	//console.log(`text ${event.summary}`);
-	//console.log(`formatEvent ${JSON.stringify(event)}`);
-	  // console.log(`sartTime ${event.start}`);
-	  // console.log(`sartTime ${calenDate(event.start).toString()}`);
+function formatEvent(event, cal) {
+   //console.log(`text ${event.summary}`);
+  //console.log(`formatEvent ${JSON.stringify(event)}`);
+  // console.log(`sartTime ${event.start}`);
+  // console.log(`sartTime ${calenDate(event.start).toString()}`);
+  //console.log(JSON.parse(settingsStorage.getItem(`url${cal}color`)));
 	  
-   //     id: "",	  
   var data = {
     start: new Date(event.startDate).getTime(),
     end:  event.endDate === undefined ? new Date(event.startDate).getTime() : new Date(event.endDate).getTime(),
     allDay: event.allDay,
     summary: event.summary,
     location: event.location === undefined ? "" : event.location,
-    color: formatColor(calendar),
-    cal: "Calendar " + calendar
+    color: JSON.parse(settingsStorage.getItem(`url${cal}color`)),
+    cal: JSON.parse(settingsStorage.getItem(`url${cal}name`)).name
   };
-  /**
-      calendar: {
-      color: formatColor(calendar),
-      summary: "Calendar " + calendar,
-      id: calendar,
-    },
-   */
+  //console.log(`formatEvent ${JSON.stringify(data)}`);
   return data;
 }
 
