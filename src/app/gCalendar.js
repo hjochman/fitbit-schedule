@@ -72,7 +72,6 @@ export default class GCalendar {
     let now = new Date();
     if (this._events === undefined || now - this._lastUpdate > 10 * 60 * 1000) {
       this.forceFetchEvents();
-    } else {
     }
     return this.getEvents();
   }

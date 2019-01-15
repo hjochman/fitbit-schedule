@@ -50,14 +50,14 @@ var mzone = mzone || {};
 			date = new Date(date);
 		}
 		var offsetOrg = date.getTimezoneOffset()
-		console.log("date: " + date + " offsetOrg=" + date.getTimezoneOffset())
+//		console.log("date: " + date + " offsetOrg=" + date.getTimezoneOffset())
 		var utc = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
 		var tz = getZone(tzName);
 		if (!tz) {
 			throw "Invalid timezone: " + tzName;
 		}
 		var offsetNew = tz.parse(utc);
-		console.log("utc: " + utc + " offsetNew=" + offsetNew);       
+//		console.log("utc: " + utc + " offsetNew=" + offsetNew);       
 		return new Date(date.getTime() + (offsetNew - offsetOrg) * 60000);
 	}
 

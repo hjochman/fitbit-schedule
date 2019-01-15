@@ -29,12 +29,12 @@ export default class gCalendar {
     
     let calendarIDs = [];
     let calendarInfo = [];
+    
 
       for (var i = 0; i < 5 && settingsStorage.getItem(`url${i}`) !== null; i++) {
     	  let url = JSON.parse(settingsStorage.getItem(`url${i}`)).name;
     	  console.log(`cal${i}: ${url}`);
     	  if (url.length > 0){
-    		  console.log(settingsStorage.getItem(`url${i}t`));
     		  if (JSON.parse(settingsStorage.getItem(`url${i}t`)) == true) {
     			  calendarIDs.push(getEventsPromiseCALDAV(url));    		  
     		  } else {
@@ -43,8 +43,8 @@ export default class gCalendar {
     		  calendarInfo.push(i);
     	  }
       }
-
-      console.log(calendarIDs.length);
+      
+      console.log("Found " + calendarIDs.length + " calendar");
       
       if (calendarIDs.length == 0) return;
       
@@ -53,14 +53,15 @@ export default class gCalendar {
       promise.all(calendarIDs).then((values) => {
         let events = [];
         for (let i in values) {
-        	console.log(`cal ${i} is ${values[i].substring(0,20)}`);
+       // 	console.log(`cal ${i} is ${JSON.stringify(values[i])}`);	
+          if (values[i].error !== undefined) {
+             console.log(`Error occurred while fetching calendar:`);
+             console.log(JSON.stringify(values[i].error));
+             throw values[i].error
+          } 
+          
+          console.log(`cal ${i} is ${values[i].substring(0,20)}`);
 
-        /***********************************************************************
-		 * if (values[i].error !== undefined) { console.log("Error occurred
-		 * while fetching calendar " + i +" :");
-		 * console.log(JSON.stringify(values[i].error)); continue; }
-		 **********************************************************************/
-          	
           let items = icsToJson(values[i])  
           
           for (let event of items) {
@@ -82,6 +83,7 @@ export default class gCalendar {
           else return 0;      
         });
         
+        //We need to cut down the sice and number of events as the api can only habdel an maximum file size
         events = events.slice(0, MAX_EVENT_COUNT);       
         for (var i = (MAX_EVENT_COUNT-1); jsonSize({lastUpdate: now, events: events}) > MAX_EVENT_MEM; i--) {
         	events = events.slice(0, i);
@@ -112,14 +114,14 @@ function getEventsPromiseCALDAV(calendarURL) {
   
   let now = new Date();
   now = new Date(now.getTime() - (1 * 60 * 60 * 1000) + now.getTimezoneOffset() * 60000);  
-  console.log(`now=${now}`);
+//  console.log(`now=${now}`);
   let then = new Date(now.getTime() + (10*24*60*60*1000));
   then = new Date(then.getTime() + then.getTimezoneOffset() * 60000);  
-  console.log(`then=${then}`);
+//  console.log(`then=${then}`);
   let startDate = `${now.getYear()+1900}${zeroPad(now.getMonth()+1)}${zeroPad(now.getDate())}T${zeroPad(now.getHours())}${zeroPad(now.getMinutes())}${zeroPad(now.getSeconds())}Z`;
-  console.log(`now is ${startDate}`)  ;
+//  console.log(`now is ${startDate}`)  ;
   let endDate = `${then.getYear()+1900}${zeroPad(then.getMonth()+1)}${zeroPad(then.getDate())}T${zeroPad(then.getHours())}${zeroPad(then.getMinutes())}${zeroPad(then.getSeconds())}Z`;
-  console.log(`then is ${endDate}`)  ;    		
+//  console.log(`then is ${endDate}`)  ;    		
 
   loginPass = JSON.parse(settingsStorage.getItem("pass")).name;
   loginUser = JSON.parse(settingsStorage.getItem("user")).name;
@@ -165,16 +167,12 @@ function getEventsPromiseCALDAV(calendarURL) {
     	     console.log(result.headers.get('Content-Type'));
     	     return result.text();
     	  })
+    	  .catch((err) => {
+    		  var tmp = `Failed to fetch calendar ${calendarURL} with error ${err}`
+    		  console.log(tmp);
+    		  return {"error" : tmp};
+    	  });
 }
-
-function zeroPad(i) {
-    
-    if (i < 10) {
-        i = "0" + i;
-    }
-    return i;
-}
-
 
 function getEventsPromiseICS(calendarURL) { 
   var headers = new Headers();
@@ -184,7 +182,20 @@ function getEventsPromiseICS(calendarURL) {
   
   return fetch(calendarURL, {
 	  method: "GET",
-      headers}).then((res) => res.text());
+      headers}).then((res) => res.text())
+  .catch((err) => {
+	  var tmp = `Failed to fetch calendar ${calendarURL} with error ${err}`
+      console.log(tmp);
+      return {"error" : tmp};
+  });
+}
+
+function zeroPad(i) {
+    
+    if (i < 10) {
+        i = "0" + i;
+    }
+    return i;
 }
 
 function formatEvent(event, cal) {

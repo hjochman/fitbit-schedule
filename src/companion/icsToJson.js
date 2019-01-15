@@ -119,10 +119,10 @@ function addTZ(dt, params) {
 	var p = parseParams(params);
 
 	if (params && p && p.TZID){
-		console.log(params);
-		console.log("add TZ: " + p.TZID + " to " + dt);
+//		console.log(params);
+//		console.log("add TZ: " + p.TZID + " to " + dt);
 		dt = mzone.addtz(dt,p.TZID);
-		console.log("new dt: " +dt);
+//		console.log("new dt: " +dt);
 	}
 	return dt
 }
@@ -185,7 +185,7 @@ const icsToJson = icsData => {
 		case START_DATE:
 			if (isEvent) {  
 				currentObj[keyMap[START_DATE]] = calenDate(value, params);
-				console.log("s: "+value + " | " + params);	
+//				console.log("s: "+value + " | " + params);	
 				if (value.length == 8 || params[0] === "VALUE=DATE" ){
 					isAllday = true;
 				}
@@ -208,7 +208,7 @@ const icsToJson = icsData => {
 		case SUMMARY:
 			if (isEvent) {  
 				currentObj[keyMap[SUMMARY]] = clean(value);
-				console.log("t: "+clean(value));	
+//				console.log("t: "+clean(value));	
 			}
 			break;
 		case LOCATION:

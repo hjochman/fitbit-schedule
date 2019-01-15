@@ -75,16 +75,13 @@ messaging.peerSocket.onmessage = (evt) => {
     settings[evt.data.key] = evt.data.newValue;
   }
 
- /** if (evt.data.key === 'oauth_refresh_token' && !evt.data.restore) {
-    // Google calendar OAuth settings
-    if (evt.data.newValue === undefined) {
-      calendar.dropEvents();
-    } else if (calendar.fetchEvents()) {
+  //console.log(evt.data.key);
+ if (evt.data.key === 'url0' || evt.data.key === 'url1' || evt.data.key === 'url2' || evt.data.key === 'url3' || evt.data.key === 'url4') {
+    //console.log("Calendar url settings");
+    if (calendar.forceFetchEvents()) {
       calendar.onUpdate();
     }
-  } else **/ 
-	  
-  if (evt.data.key === 'system_default_font' && !evt.data.restore) {
+  } else if (evt.data.key === 'system_default_font' && !evt.data.restore) {
     // Font change
     updateFont();
     eventListSV.redraw();
