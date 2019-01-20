@@ -1,10 +1,10 @@
-# Schedule
+# Schedule caldav/ical
 
 A schedule viewer for Fitbit OS 2.
 
 ## Install
 
-1. Tap [here](https://gam.fitbit.com/gallery/app/38b688ed-0ff1-40cc-a906-5a9a50852740) to redirect to Fitbit App gallery. (Mobile only).
+1. Tap  to redirect to Fitbit App gallery. (Mobile only).
 2. Log in to your Google account in the Schedule app settings.
 
 ## Features
