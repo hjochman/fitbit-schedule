@@ -10,6 +10,16 @@ import { me as device } from "device";
 import { _ } from "../common/locale.js";
 import { initLocale } from "./locale.js";
 
+
+//* 
+// https://github.com/dillpixel/fitbit-google-analytics
+import analytics from "fitbit-google-analytics/app"
+
+analytics.configure({
+  tracking_id: "UA-132817351-1"
+})
+// */
+
 if (!device.screen) device.screen = { width: 348, height: 250 };
 
 import GCalendar from "./gCalendar.js";
@@ -39,7 +49,7 @@ var fontFamily;
 
 function updateFont() {
   fontFamily = (settings.system_default_font) ? "System" : "Fabrikat";
-  dateText.style.fontFamily = `${fontFamily}-Regular`;
+  dateText.style["font-family"]  = `${fontFamily}-Regular`;
 }
 
 updateFont();
@@ -222,12 +232,12 @@ eventListSV.delegate = {
     let textElement = tile.getElementById('text');
     if (info.type === "date-separator-pool" || info.type === "last-update-pool") {
       textElement.text = info.value;
-      textElement.style.fontFamily = `${fontFamily}-Regular`;
+      textElement.style["font-family"]  = `${fontFamily}-Regular`;
       return;
     }
     if (info.type === "no-event-message-pool") {
       textElement.text = info.value;
-      textElement.style.fontFamily = `${fontFamily}-Regular`;
+      textElement.style["font-family"]  = `${fontFamily}-Regular`;
       return;
     }
 
@@ -236,13 +246,13 @@ eventListSV.delegate = {
 
     let summary = tile.getElementById('event-summary');
     summary.text = info.event.summary;
-    summary.style.fontFamily = `${fontFamily}-Regular`;
+    summary.style["font-family"]  = `${fontFamily}-Regular`;
     if (info.type === "event-pool" || info.type === "event-now-pool") {
-      summary.style.fontFamily = `${fontFamily}-Bold`;
+      summary.style["font-family"]  = `${fontFamily}-Bold`;
       let location = tile.getElementById('event-location');
       summary.style.height = 45;
       summary.rows = 1;
-      location.style.fontFamily = `${fontFamily}-Regular`;
+      location.style["font-family"]  = `${fontFamily}-Regular`;
       if (summary.textOverflowing || !info.event.location) {
         summary.height = 150;
         summary.rows = 2;
@@ -254,7 +264,7 @@ eventListSV.delegate = {
       let evtTime = tile.getElementById('event-time');
       evtTime.text =
         formatTimeRange(info.event.start, info.event.end, true, info.event.allDay, false);
-      evtTime.style.fontFamily = `${fontFamily}-Regular`;
+        evtTime.style["font-family"]  = `${fontFamily}-Regular`;
     }
     tile.value = info.index;
 

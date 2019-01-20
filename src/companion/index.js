@@ -4,6 +4,10 @@ import GCalendar from "./iCalendar";
 import { me } from "companion";
 import { GC_DATA_FILE, GC_ERROR_FILE, GC_UPDATE_TOKEN, MAX_EVENT_COUNT, GC_FETCH_TOKEN } from "../common/const";
 
+//https://github.com/dillpixel/fitbit-google-analytics
+import "fitbit-google-analytics/companion"
+
+
 const gCalendar = new GCalendar();
 
 // Message socket opens
