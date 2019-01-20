@@ -11,14 +11,14 @@ import { _ } from "../common/locale.js";
 import { initLocale } from "./locale.js";
 
 
-//* 
+/* 
 // https://github.com/dillpixel/fitbit-google-analytics
 import analytics from "fitbit-google-analytics/app"
 
 analytics.configure({
   tracking_id: "UA-132817351-1"
 })
-// */
+*/
 
 if (!device.screen) device.screen = { width: 348, height: 250 };
 
@@ -85,7 +85,7 @@ messaging.peerSocket.onmessage = (evt) => {
     settings[evt.data.key] = evt.data.newValue;
   }
 
-  //console.log(evt.data.key);
+ //console.log(evt.data.key);
  if (evt.data.key === 'url0' || evt.data.key === 'url1' || evt.data.key === 'url2' || evt.data.key === 'url3' || evt.data.key === 'url4') {
     //console.log("Calendar url settings");
     if (calendar.forceFetchEvents()) {

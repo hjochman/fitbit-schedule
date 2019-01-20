@@ -30,8 +30,8 @@ export default class gCalendar {
     let calendarIDs = [];
     let calendarInfo = [];
     
-//undefined
-      for (var i = 0; i < 5 && settingsStorage.getItem(`url${i}`) !== null; i++) {
+//undefined or null
+      for (var i = 0; i < 5 && settingsStorage.getItem(`url${i}`) !== undefined; i++) {
     	  let url = JSON.parse(settingsStorage.getItem(`url${i}`)).name;
     	  console.log(`cal${i}: ${url}`);
     	  if (url.length > 0){
