@@ -1,16 +1,16 @@
-# Schedule
+# Schedule caldav/ical
 
 A schedule viewer for Fitbit OS 2.
 
 ## Install
 
-1. Tap [here](https://gam.fitbit.com/gallery/app/38b688ed-0ff1-40cc-a906-5a9a50852740) to redirect to Fitbit App gallery. (Mobile only).
+1. Tap [here](https://gam.fitbit.com/gallery/app/e7246ff0-37c9-4709-9ecb-20c322137295) to redirect to Fitbit App gallery. (Mobile only).
 2. Log in to your Google account in the Schedule app settings.
 
 ## Features
 - [x] Support Fitbit Versa and Fitbit Ionic.
 - [x] Support ICAL and CLDAV Calendar
-    - [x] Show multiple calendars together
+    - [x] Show up to 5 calendars (from one caldav account and multiple ical links) together
 - [x] Detail page showing event title, time and location.
 - [x] Countdown to the end of current event
 - [x] Countdown to the start of next event
@@ -41,13 +41,6 @@ To adjust 12h/24h settings, go to your Fitbit web profile page.
 
 In 12h mode, `0:00` midnight is shown as `12:00m`, and `12:00` noon is shown as `12:00n`, other time is followed by `a` or `p` as normal.
 
-## Plan
-- [ ] Other calendar service support (Outlook, etc.)
-- [ ] Theming
-
-## Support me
-
-If you like my apps, [buy me a cup of coffee](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ilove@1a23.com&item_name=Donation%20%28Schedule%20App%29) :)
 
 Or if you want to help develop it, send a pull request!
 
