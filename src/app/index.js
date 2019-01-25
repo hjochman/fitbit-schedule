@@ -11,14 +11,14 @@ import { _ } from "../common/locale.js";
 import { initLocale } from "./locale.js";
 
 
-/* 
+
 // https://github.com/dillpixel/fitbit-google-analytics
 import analytics from "fitbit-google-analytics/app"
 
 analytics.configure({
   tracking_id: "UA-132817351-1"
 })
-*/
+
 
 if (!device.screen) device.screen = { width: 348, height: 250 };
 
