@@ -9,6 +9,7 @@ import { me } from "appbit";
 import { me as device } from "device";
 import { _ } from "../common/locale.js";
 import { initLocale } from "./locale.js";
+import { GC_TRACKING_ID } from "../common/google";
 
 
 
@@ -16,7 +17,7 @@ import { initLocale } from "./locale.js";
 import analytics from "fitbit-google-analytics/app"
 
 analytics.configure({
-  tracking_id: "UA-132817351-1"
+  tracking_id: GC_TRACKING_ID
 })
 
 
