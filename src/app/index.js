@@ -278,5 +278,17 @@ eventListSV.delegate = {
 overlayInit(container);
 
 calendar.onUpdate = renderEvents;
-calendar.onError = renderSnackBar;
+
+//calendar.onError = renderSnackBar;
+calendar.onError = function (error){
+	renderOverlay({
+    start: new Date().getTime(),
+    end:  new Date().getTime(),
+    allDay: false,
+    summary: "Error",
+    location: error,
+    color: "#FF0000",
+    cal: ""
+  })
+};
 renderEvents();
