@@ -10,6 +10,7 @@ import { me as device } from "device";
 import { _ } from "../common/locale.js";
 import { initLocale } from "./locale.js";
 import { GC_TRACKING_ID } from "../common/google";
+import { DEBUG } from "../common/const";
 
 
 
@@ -86,9 +87,9 @@ messaging.peerSocket.onmessage = (evt) => {
     settings[evt.data.key] = evt.data.newValue;
   }
 
- //console.log(evt.data.key);
+ //DEBUG && console.log(evt.data.key);
  if (evt.data.key === 'url0' || evt.data.key === 'url1' || evt.data.key === 'url2' || evt.data.key === 'url3' || evt.data.key === 'url4') {
-    //console.log("Calendar url settings");
+    //DEBUG && console.log("Calendar url settings");
     if (calendar.forceFetchEvents()) {
       calendar.onUpdate();
     }
@@ -107,19 +108,19 @@ messaging.peerSocket.onmessage = (evt) => {
     try { initLocale(settings.language_override.values[0].value); }
     catch (err) {
       initLocale("en-US");
-      console.log(`Malformed language entry: ${settings.language_override}`);
+      DEBUG && console.log(`Malformed language entry: ${settings.language_override}`);
     }
 
   }
 };
 
 messaging.peerSocket.onopen = () => {
-  console.log("App Socket Open");
+  DEBUG && console.log("App Socket Open");
   calendar.fetchEvents();
 };
 
 messaging.peerSocket.onclose = () => {
-  console.log("App Socket Closed");
+  DEBUG && console.log("App Socket Closed");
 };
 
 
@@ -138,7 +139,7 @@ function renderEvents() {
     renderCountdown(settings, []);
     listStorage = renderPersistentErrorMessage(_("login_required"), eventListSV);
     eventListSV.redraw();
-    console.log("No settings found, error and quit")
+    DEBUG && console.log("No settings found, error and quit")
     return;
    }
 		  
@@ -152,15 +153,15 @@ function renderEvents() {
   ];
   let lastDay = formatDate(now, false);
   const events = calendar.getEvents();
-//  console.log(`App Events: ${JSON.stringify(events)}`);
+//  DEBUG && console.log(`App Events: ${JSON.stringify(events)}`);
   if (events === undefined || events.length === 0) {
-    console.log('Calendar events are undefined or empty!');
+    DEBUG && console.log('Calendar events are undefined or empty!');
     listStorage = renderPersistentErrorMessage(_("no_event"), eventListSV);
     return;
   }
   for (let i in events) {
     let date = formatDate(events[i].start, false);
-//    console.log(`start: ${events[i].start} / ${date.toString()}`);
+//    DEBUG && console.log(`start: ${events[i].start} / ${date.toString()}`);
     
     if (date != lastDay) {
       listStorage.push({
@@ -202,7 +203,7 @@ document.onkeypress = function (e) {
     } else if (e.key == "up") {
       dsvItem.y = Math.min(0, dsvItem.y + 150);
     } else if (e.key == "down") {
-      console.log(`${dsvItem.y} + 150 = ${dsvItem.y + 150}; Upper: ${dsvItem.getBBox().height} -  ${device.screen.height} = ${dsvItem.getBBox().height - device.screen.height}; lower: 0`);
+      DEBUG && console.log(`${dsvItem.y} + 150 = ${dsvItem.y + 150}; Upper: ${dsvItem.getBBox().height} -  ${device.screen.height} = ${dsvItem.getBBox().height - device.screen.height}; lower: 0`);
       dsvItem.y = Math.min(Math.max(dsvItem.y - 150, - dsvItem.getBBox().height + device.screen.height), 0);
     }
   } else if (container.value == 0) {

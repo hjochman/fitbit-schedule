@@ -3,7 +3,7 @@ import { outbox } from "file-transfer";
 import { peerSocket } from "messaging";
 import * as cbor from "cbor";
 import icsToJson from "./icsToJson.js"
-import { GC_DATA_FILE, GC_ERROR_FILE, GC_UPDATE_TOKEN, MAX_EVENT_COUNT, MAX_EVENT_MEM } from "../common/const";
+import { GC_DATA_FILE, GC_ERROR_FILE, GC_UPDATE_TOKEN, MAX_EVENT_COUNT, MAX_EVENT_MEM, DEBUG } from "../common/const";
 
 export default class gCalendar {
 
@@ -11,11 +11,11 @@ export default class gCalendar {
 		let self = this;
 		this.data = {lastUpdate: 0};
 		peerSocket.addEventListener("message", (evt) => {
-			console.log(`listening socket heard ${JSON.stringify(evt.data)}`);
+			DEBUG && console.log(`listening socket heard ${JSON.stringify(evt.data)}`);
 			// We are receiving a request from the app
 			if (evt.data === undefined) return;
 			if (evt.data[GC_UPDATE_TOKEN] == true) {
-				console.log("Start loading events");
+				DEBUG && console.log("Start loading events");
 				self.loadEvents();
 			} 
 		});
@@ -34,7 +34,7 @@ export default class gCalendar {
 //			undefined or null
 			for (var i = 0; i < 5 && settingsStorage.getItem(`url${i}`) !== undefined  && settingsStorage.getItem(`url${i}`) !== null; i++) {
 				let url = JSON.parse(settingsStorage.getItem(`url${i}`)).name;
-				console.log(`cal${i}: ${url}`);
+				DEBUG && console.log(`cal${i}: ${url}`);
 				if (url.length > 0){
 					if (JSON.parse(settingsStorage.getItem(`url${i}t`)) == true) {
 						calendarIDs.push(getEventsPromiseCALDAV(url));    		  
@@ -45,7 +45,7 @@ export default class gCalendar {
 				}
 			}
 
-			console.log("Found " + calendarIDs.length + " calendar");
+			DEBUG && console.log("Found " + calendarIDs.length + " calendar");
 
 			if (calendarIDs.length == 0) return;
 
@@ -54,14 +54,14 @@ export default class gCalendar {
 			promise.all(calendarIDs).then((values) => {
 				let events = [];
 				for (let i in values) {
-					// console.log(`cal ${i} is ${JSON.stringify(values[i])}`);
+					// DEBUG && console.log(`cal ${i} is ${JSON.stringify(values[i])}`);
 					if (values[i].error !== undefined) {
-						console.log(`Error occurred while fetching calendar:`);
-						console.log(JSON.stringify(values[i].error));
+						DEBUG && console.log(`Error occurred while fetching calendar:`);
+						DEBUG && console.log(JSON.stringify(values[i].error));
 						throw values[i].error
 					} 
 
-					console.log(`cal ${i} is ${values[i].substring(0,20)}`);
+					DEBUG && console.log(`cal ${i} is ${values[i].substring(0,20)}`);
 
 					let items = icsToJson(values[i])  
 
@@ -90,26 +90,26 @@ export default class gCalendar {
 				for (var i = (MAX_EVENT_COUNT-1); jsonSize({lastUpdate: now, events: events}) > MAX_EVENT_MEM; i--) {
 					events = events.slice(0, i);
 				}
-				console.log("GC_DATA_FILE size = " + jsonSize({lastUpdate: now, events: events}));
-				console.log("event count = " + events.length);
+				DEBUG && console.log("GC_DATA_FILE size = " + jsonSize({lastUpdate: now, events: events}));
+				DEBUG && console.log("event count = " + events.length);
 
 				// Send the file out
 				outbox.enqueue(GC_DATA_FILE, cbor.encode({lastUpdate: now, events: events}))
-				.catch(error => console.log(`Fail to send data: ${error}`));
+				.catch(error => DEBUG && console.log(`Fail to send data: ${error}`));
 				self.data = {lastUpdate: now, events: events};
 			}).catch(err => {
-				console.log('Error occurred while fetching single calendar events: ' + err + err.stack);
+				DEBUG && console.log('Error occurred while fetching single calendar events: ' + err + err.stack);
 				let error=`${err}`;
 				outbox.enqueue(GC_ERROR_FILE, cbor.encode(error))
-				.catch(error => console.log(`Fail to send error: ${error}`));
+				.catch(error => DEBUG && console.log(`Fail to send error: ${error}`));
 			});
 
 		}
 		catch(err) {
-			console.log('Error: ' + err + err.stack);
+			DEBUG && console.log('Error: ' + err + err.stack);
 			let error = `${err} ${err.stack}`;
 			outbox.enqueue(GC_ERROR_FILE, cbor.encode(error))
-			.catch(error => console.log(`Fail to send error: ${error}`));	  
+			.catch(error => DEBUG && console.log(`Fail to send error: ${error}`));	  
 		}
 
 	}
@@ -124,19 +124,19 @@ function getEventsPromiseCALDAV(calendarURL) {
 
 	let now = new Date();
 	now = new Date(now.getTime() - (1 * 60 * 60 * 1000) + now.getTimezoneOffset() * 60000);  
-//	console.log(`now=${now}`);
+//	DEBUG && console.log(`now=${now}`);
 	let then = new Date(now.getTime() + (10*24*60*60*1000));
 	then = new Date(then.getTime() + then.getTimezoneOffset() * 60000);  
-//	console.log(`then=${then}`);
+//	DEBUG && console.log(`then=${then}`);
 	let startDate = `${now.getYear()+1900}${zeroPad(now.getMonth()+1)}${zeroPad(now.getDate())}T${zeroPad(now.getHours())}${zeroPad(now.getMinutes())}${zeroPad(now.getSeconds())}Z`;
-//	console.log(`now is ${startDate}`) ;
+//	DEBUG && console.log(`now is ${startDate}`) ;
 	let endDate = `${then.getYear()+1900}${zeroPad(then.getMonth()+1)}${zeroPad(then.getDate())}T${zeroPad(then.getHours())}${zeroPad(then.getMinutes())}${zeroPad(then.getSeconds())}Z`;
-//	console.log(`then is ${endDate}`) ;
+//	DEBUG && console.log(`then is ${endDate}`) ;
 
 	loginPass = JSON.parse(settingsStorage.getItem("pass")).name;
 	loginUser = JSON.parse(settingsStorage.getItem("user")).name;
 
-	// console.log(loginUser + ":" + loginPass);
+	// DEBUG && console.log(loginUser + ":" + loginPass);
 
 	headers.append("Depth",1); 
 	headers.append("Prefer","return-minimal");
@@ -172,14 +172,14 @@ function getEventsPromiseCALDAV(calendarURL) {
 			</C:comp-filter>\
 			</C:filter>\
 	</C:calendar-query>`}).then(function(result) {  
-		console.log("---------------------- Http sucess ---------------------");
-		console.log(result.status);
-		console.log(result.headers.get('Content-Type'));
+		DEBUG && console.log("---------------------- Http sucess ---------------------");
+		DEBUG && console.log(result.status);
+		DEBUG && console.log(result.headers.get('Content-Type'));
 		return result.text();
 	})
 	.catch((err) => {
 		var tmp = `Failed to fetch calendar ${calendarURL} with error ${err}`
-			console.log(tmp);
+			DEBUG && console.log(tmp);
 		return {"error" : tmp};
 	});
 }
@@ -195,7 +195,7 @@ function getEventsPromiseICS(calendarURL) {
 		headers}).then((res) => res.text())
 		.catch((err) => {
 			var tmp = `Failed to fetch calendar ${calendarURL} with error ${err}`
-				console.log(tmp);
+				DEBUG && console.log(tmp);
 			return {"error" : tmp};
 		});
 }
@@ -209,11 +209,11 @@ function zeroPad(i) {
 }
 
 function formatEvent(event, cal) {
-	// console.log(`text ${event.summary}`);
-	// console.log(`formatEvent ${JSON.stringify(event)}`);
-	// console.log(`sartTime ${event.start}`);
-	// console.log(`sartTime ${calenDate(event.start).toString()}`);
-	// console.log(JSON.parse(settingsStorage.getItem(`url${cal}color`)));
+	// DEBUG && console.log(`text ${event.summary}`);
+	// DEBUG && console.log(`formatEvent ${JSON.stringify(event)}`);
+	// DEBUG && console.log(`sartTime ${event.start}`);
+	// DEBUG && console.log(`sartTime ${calenDate(event.start).toString()}`);
+	// DEBUG && console.log(JSON.parse(settingsStorage.getItem(`url${cal}color`)));
 
 	var data = {
 			start: new Date(event.startDate).getTime(),
@@ -224,7 +224,7 @@ function formatEvent(event, cal) {
 							color: JSON.parse(settingsStorage.getItem(`url${cal}color`)),
 							cal: JSON.parse(settingsStorage.getItem(`url${cal}name`)).name
 	};
-	// console.log(`formatEvent ${JSON.stringify(data)}`);
+	// DEBUG && console.log(`formatEvent ${JSON.stringify(data)}`);
 	return data;
 }
 

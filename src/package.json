@@ -15,13 +15,13 @@
     ],
     "i18n": {
       "en": {
-        "name": "Schedule"
+        "name": "Schedule CALDAV/ICAL"
       },
       "ja": {
-        "name": "スケジュール"
+        "name": "スケジュール CALDAV/ICAL"
       },
       "zh-cn": {
-        "name": "日程"
+        "name": "日程 CALDAV/ICAL"
       }
     }
   },

@@ -6,3 +6,4 @@ export const MAX_EVENT_COUNT = 25;
 export const MAX_EVENT_MEM = 5500;
 export const SETTINGS_TYPE = "cbor";
 export const SETTINGS_FILE = "settings.cbor";
+export const DEBUG = false;

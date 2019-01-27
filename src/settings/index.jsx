@@ -1,4 +1,5 @@
 import { _, setPrefLanguage } from "./settingsLocale.js";
+import { DEBUG } from "../common/const";
 
 
 function mySettings(props) {
@@ -11,7 +12,7 @@ function mySettings(props) {
    	}
   } catch (e) {
     setPrefLanguage("en-US");
-    console.log("Malformed language settings: " + e + ", " + props.settingsStorage.getItem("language_override"));
+    DEBUG && console.log("Malformed language settings: " + e + ", " + props.settingsStorage.getItem("language_override"));
   }
 
 //Set default values

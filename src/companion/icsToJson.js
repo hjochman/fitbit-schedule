@@ -6,6 +6,8 @@
  * 
  */
 import mzone from "./timezone.js"
+import { DEBUG } from "../common/const";
+
 
 
 const NEW_LINE = /\r\n|\n|\r/;
@@ -119,10 +121,10 @@ function addTZ(dt, params) {
 	var p = parseParams(params);
 
 	if (params && p && p.TZID){
-//		console.log(params);
-//		console.log("add TZ: " + p.TZID + " to " + dt);
+//		DEBUG && console.log(params);
+//		DEBUG && console.log("add TZ: " + p.TZID + " to " + dt);
 		dt = mzone.addtz(dt,p.TZID);
-//		console.log("new dt: " +dt);
+//		DEBUG && console.log("new dt: " +dt);
 	}
 	return dt
 }
@@ -131,11 +133,11 @@ const icsToJson = icsData => {
 	const array = [];
 	let currentObj = {};
 
-	//console.log(icsData);	
+	//DEBUG && console.log(icsData);	
 
 	const lines = icsData.split(NEW_LINE);
 
-	console.log("ICS Lines: " + lines.length);
+	DEBUG && console.log("ICS Lines: " + lines.length);
 
 	let isAlarm = false;
 	let isEvent = false;
@@ -163,7 +165,7 @@ const icsToJson = icsData => {
 		var name = kp[0]
 		var params = kp.slice(1)
 
-		//console.log("ICS " + name + " => " + value);    
+		//DEBUG && console.log("ICS " + name + " => " + value);    
 		switch (name) {
 		case EVENT_START:
 			if (value === EVENT) {
@@ -185,7 +187,7 @@ const icsToJson = icsData => {
 		case START_DATE:
 			if (isEvent) {  
 				currentObj[keyMap[START_DATE]] = calenDate(value, params);
-//				console.log("s: "+value + " | " + params);	
+//				DEBUG && console.log("s: "+value + " | " + params);	
 				if (value.length == 8 || params[0] === "VALUE=DATE" ){
 					isAllday = true;
 				}
@@ -194,7 +196,7 @@ const icsToJson = icsData => {
 		case END_DATE:
 			if (isEvent) {  
 				currentObj[keyMap[END_DATE]] = calenDate(value, params);
-//				console.log("e: "+value);	
+//				DEBUG && console.log("e: "+value);	
 				if (value.length == 8 || params[0] === "VALUE=DATE" ){
 					isAllday = true;
 				}
@@ -208,13 +210,13 @@ const icsToJson = icsData => {
 		case SUMMARY:
 			if (isEvent) {  
 				currentObj[keyMap[SUMMARY]] = clean(value);
-//				console.log("t: "+clean(value));	
+//				DEBUG && console.log("t: "+clean(value));	
 			}
 			break;
 		case LOCATION:
 			if (isEvent) {  
 				currentObj[keyMap[LOCATION]] = clean(value);
-//				console.log("l: " + clean(value));	
+//				DEBUG && console.log("l: " + clean(value));	
 			}
 		default:
 			continue;

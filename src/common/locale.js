@@ -1,5 +1,7 @@
 import * as fs from "fs";
 import { locale } from "user-settings";
+import { DEBUG } from "../common/const";
+
 
 let default_strings = {};
 let pref_strings = {};
@@ -12,14 +14,14 @@ export function initStrings(pref_language, default_language = 'en-US') {
     try {
         pref_strings = fs.readFileSync(`resources/locales/${pref_language}.json`, "json");
     } catch (error) {
-        console.log(error);
+        DEBUG && console.log(error);
     }
 
     if (default_language !== pref_language) {
         try {
             default_strings = fs.readFileSync(`resources/locales/${default_language}.json`, "json");
         } catch (error) {
-            console.log(error);
+            DEBUG && console.log(error);
         }
     }
 }

@@ -2,14 +2,14 @@ import * as fs from "fs";
 import * as cbor from "cbor";
 import { peerSocket } from "messaging";
 import { _ } from "../common/locale.js";
-import { GC_DATA_FILE, GC_ERROR_FILE, GC_UPDATE_TOKEN, MAX_EVENT_COUNT } from "../common/const";
+import { GC_DATA_FILE, GC_ERROR_FILE, GC_UPDATE_TOKEN, MAX_EVENT_COUNT, DEBUG } from "../common/const";
 
 export default class GCalendar {
   constructor() {
     this.onUpdate = function(){};
     this.onError = function(error){};
     this._lastUpdate = new Date().getTime();
-    console.log("- load Envets from file start -");    
+    DEBUG && console.log("- load Envets from file start -");    
     try {
       this._events = fs.readFileSync(GC_DATA_FILE, "cbor");
       if (this._events !== undefined) {
@@ -19,7 +19,7 @@ export default class GCalendar {
 //DEBUG: ---------------------------------------------------------
         this._events = this._events.events;
       } else {
-        console.log("no cached calendar retrived on load");
+        DEBUG && console.log("no cached calendar retrived on load");
       }
     } catch (n) {
       this._lastUpdate = 0;
@@ -34,10 +34,10 @@ export default class GCalendar {
   }
   
   processFile(fileName) {
-    console.log('Processing file ' + fileName);
+    DEBUG && console.log('Processing file ' + fileName);
     if (fileName === GC_DATA_FILE) {
       let data = fs.readFileSync(GC_DATA_FILE, "cbor");
-      console.log('raw data read from file');
+      DEBUG && console.log('raw data read from file');
       if (data !== undefined) {
         this._events = data.events;
         this._lastUpdate = data.lastUpdate;
@@ -45,7 +45,7 @@ export default class GCalendar {
       }
     } else if (fileName === GC_ERROR_FILE) {
       const error = fs.readFileSync(GC_ERROR_FILE, "cbor");
-      console.log(`Events read error. ${error} ${JSON.stringify(error)}`);
+      DEBUG && console.log(`Events read error. ${error} ${JSON.stringify(error)}`);
       this.onError(_("error_get_events", JSON.stringify(error)));
     } else return false;
   }
@@ -81,7 +81,7 @@ export default class GCalendar {
       // Send a command to the companion
       peerSocket.send({GC_UPDATE_TOKEN: true});
     } else {
-      console.log("No connection with the companion");
+      DEBUG && console.log("No connection with the companion");
       this.onError(_("no_connection_to_companion"));
     }
     return this._events;

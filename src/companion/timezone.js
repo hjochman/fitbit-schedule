@@ -24,6 +24,7 @@
  *      console.log(mzone.tz(d, "Australia/Sydney").toLocaleString());
  * </script> 
  */
+import { DEBUG } from "../common/const";
 
 var mzone = mzone || {};
 
@@ -50,14 +51,14 @@ var mzone = mzone || {};
 			date = new Date(date);
 		}
 		var offsetOrg = date.getTimezoneOffset()
-//		console.log("date: " + date + " offsetOrg=" + date.getTimezoneOffset())
+//		DEBUG && console.log("date: " + date + " offsetOrg=" + date.getTimezoneOffset())
 		var utc = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
 		var tz = getZone(tzName);
 		if (!tz) {
 			throw "Invalid timezone: " + tzName;
 		}
 		var offsetNew = tz.parse(utc);
-//		console.log("utc: " + utc + " offsetNew=" + offsetNew);       
+//		DEBUG && console.log("utc: " + utc + " offsetNew=" + offsetNew);       
 		return new Date(date.getTime() + (offsetNew - offsetOrg) * 60000);
 	}
 
