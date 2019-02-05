@@ -5,11 +5,11 @@ A schedule viewer for Fitbit OS 2.
 ## Install
 
 1. Tap [here](https://gam.fitbit.com/gallery/app/e7246ff0-37c9-4709-9ecb-20c322137295) to redirect to Fitbit App gallery. (Mobile only).
-2. Log in to your Google account in the Schedule app settings.
+2. Add your CALDAV/iCAL calendars in the app settings (inside the Fitbit App).
 
 ## Features
 - [x] Support Fitbit Versa and Fitbit Ionic.
-- [x] Support ICAL and CLDAV Calendar
+- [x] Support ICAL and CALDAV Calendar
     - [x] Show up to 5 calendars (from one caldav account and multiple ical links) together
 - [x] Detail page showing event title, time and location.
 - [x] Countdown to the end of current event
