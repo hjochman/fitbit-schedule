@@ -1,6 +1,6 @@
 {
   "fitbit": {
-    "appUUID": "e7246ff0-37c9-4709-9ecb-20c322137295",
+    "appUUID": "4310e0c0-30b4-4c36-8994-8e115de5ec24",
     "appType": "app",
     "appDisplayName": "Schedule",
     "iconFile": "resources/icon.png",
@@ -10,8 +10,10 @@
       "run_background"
     ],
     "buildTargets": [
-      "meson",
-      "higgs"
+      "mira",
+      "higgs",
+      "gemini",
+      "meson"
     ],
     "i18n": {
       "en": {
@@ -23,11 +25,11 @@
       "zh-cn": {
         "name": "日程 CALDAV/ICAL"
       }
-    }
+    } 
   },
   "devDependencies": {
-    "@fitbit/sdk": "~3.0.0",
-    "@fitbit/sdk-cli": "^1.5.0"
+    "@fitbit/sdk": "^4.1.0",
+    "@fitbit/sdk-cli": "^1.7.1"
   },
   "scripts": {
     "build": "fitbit-build"
