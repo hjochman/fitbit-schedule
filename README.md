@@ -8,7 +8,7 @@ A schedule viewer for Fitbit OS 2.
 2. Log in to your Google account in the Schedule app settings.
 
 ## Features
-- [x] Support Fitbit Versa and Fitbit Ionic.
+- [x] Support Fitbit Versa, Versa 2, Versa lite, and Fitbit Ionic.
 - [x] Support ICAL and CLDAV Calendar
     - [x] Show up to 5 calendars (from one caldav account and multiple ical links) together
 - [x] Detail page showing event title, time and location.
