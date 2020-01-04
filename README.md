@@ -4,7 +4,7 @@ A schedule viewer for Fitbit OS 2.
 
 ## Install
 
-1. Tap [here](https://gam.fitbit.com/gallery/app/e7246ff0-37c9-4709-9ecb-20c322137295) to redirect to Fitbit App gallery. (Mobile only).
+1. Tap [here](https://gallery.fitbit.com/details/4310e0c0-30b4-4c36-8994-8e115de5ec24) to redirect to Fitbit App gallery. (Mobile only).
 2. Log in to your Google account in the Schedule app settings.
 
 ## Features
