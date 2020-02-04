@@ -1,6 +1,6 @@
 # Schedule caldav/ical
 
-A schedule viewer for Fitbit OS 2.
+A schedule viewer for Fitbit OS 4.
 
 ## Install
 
